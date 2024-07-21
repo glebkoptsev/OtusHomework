@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OtusHomework.Database.Entities;
 using OtusHomework.DTOs;
 using OtusHomework.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace OtusHomework.Controllers
 {
@@ -27,7 +28,7 @@ namespace OtusHomework.Controllers
         }
 
         [HttpGet, Route("search")]
-        public async Task<ActionResult<List<User>>> SearchUser(string first_name, string second_name)
+        public async Task<ActionResult<List<User>>> SearchUser([Required] string first_name, [Required] string second_name)
         {
             var users = await userService.SearchUserAsync(first_name, second_name);
             if (users is null) return NotFound();
