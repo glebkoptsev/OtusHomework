@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using OtusHomework.Database;
-using OtusHomework.Security;
+using OtusHomework.Database.Security;
 using OtusHomework.Services;
 using OtusHomework.Settings;
 using OtusHomework.Swagger;

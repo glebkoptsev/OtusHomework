@@ -4,7 +4,7 @@ using System.Data;
 
 namespace OtusHomework.Database
 {
-    public class NpgsqlService : IAsyncDisposable
+    public class NpgsqlService : IAsyncDisposable, IDisposable
     {
         public NpgsqlDataSource Connection { get; }
         public NpgsqlService(IConfiguration configuration)
@@ -13,6 +13,12 @@ namespace OtusHomework.Database
                 ?? throw new Exception("connection string not found");
             Connection = NpgsqlDataSource.Create(connectionString);
             CreateDbSchema();
+        }
+
+        public void Dispose()
+        {
+            Connection.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         public async ValueTask DisposeAsync()
@@ -24,7 +30,8 @@ namespace OtusHomework.Database
         public async Task<int> ExecuteNonQueryAsync(string query, NpgsqlParameter[] parameters)
         {
             await using var cmd = Connection.CreateCommand(query);
-            cmd.Parameters.AddRange(parameters);
+            if (parameters.Length > 0)
+                cmd.Parameters.AddRange(parameters);
             return await cmd.ExecuteNonQueryAsync();
         }
 

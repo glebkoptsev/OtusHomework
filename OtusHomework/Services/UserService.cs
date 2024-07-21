@@ -2,8 +2,8 @@
 using NpgsqlTypes;
 using OtusHomework.Database;
 using OtusHomework.Database.Entities;
+using OtusHomework.Database.Security;
 using OtusHomework.DTOs;
-using OtusHomework.Security;
 
 namespace OtusHomework.Services
 {
@@ -39,7 +39,7 @@ namespace OtusHomework.Services
                 new(nameof(request.Birthdate), NpgsqlDbType.Varchar) { Value = request.Birthdate },
                 new(nameof(request.Biography), NpgsqlDbType.Varchar) { Value = request.Biography },
                 new(nameof(request.City), NpgsqlDbType.Varchar) { Value = request.City },
-                new(nameof(request.Password), NpgsqlDbType.Varchar) { Value = passwordHasher.Hash(request.Password) }
+                new(nameof(request.Password), NpgsqlDbType.Varchar) { Value = PasswordHasher.Hash(request.Password) }
             };
             await npgsqlService.ExecuteNonQueryAsync(query, parameters);
             return new UserRegisterResponse { User_id = userId };

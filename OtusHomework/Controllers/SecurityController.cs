@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using OtusHomework.Database.Security;
 using OtusHomework.DTOs;
-using OtusHomework.Security;
 using OtusHomework.Services;
 using OtusHomework.Settings;
 using System.IdentityModel.Tokens.Jwt;
@@ -31,7 +31,7 @@ namespace OtusHomework.Controllers
             if (user is null)
                 return BadRequest("Bad credentials");
 
-            var verified = passwordHasher.Check(user.Password, request.Password);
+            var verified = PasswordHasher.Check(user.Password, request.Password);
             if (!verified)
             {
                 return BadRequest("Bad credentials");
