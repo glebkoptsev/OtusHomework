@@ -25,5 +25,13 @@ namespace OtusHomework.Controllers
             if (user is null) return NotFound();
             return Ok(user);
         }
+
+        [HttpGet, Route("search")]
+        public async Task<ActionResult<List<User>>> SearchUser(string first_name, string second_name)
+        {
+            var users = await userService.SearchUserAsync(first_name, second_name);
+            if (users is null) return NotFound();
+            return Ok(users);
+        }
     }
 }

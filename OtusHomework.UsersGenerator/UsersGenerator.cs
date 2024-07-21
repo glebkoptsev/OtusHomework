@@ -18,7 +18,7 @@ namespace OtusHomework.UsersGenerator
             Console.WriteLine(rowCount);
         }
 
-        private async Task<string> GeInsertParamsFromSourceFileAsync()
+        private static async Task<string> GeInsertParamsFromSourceFileAsync()
         {
             try
             {

@@ -7,10 +7,9 @@ using OtusHomework.DTOs;
 
 namespace OtusHomework.Services
 {
-    public class UserService(NpgsqlService npgsqlService, PasswordHasher passwordHasher)
+    public class UserService(NpgsqlService npgsqlService)
     {
         private readonly NpgsqlService npgsqlService = npgsqlService;
-        private readonly PasswordHasher passwordHasher = passwordHasher;
 
         public async Task<User?> GetUserAsync(Guid id)
         {
@@ -43,6 +42,27 @@ namespace OtusHomework.Services
             };
             await npgsqlService.ExecuteNonQueryAsync(query, parameters);
             return new UserRegisterResponse { User_id = userId };
+        }
+
+        public async Task<List<User>?> SearchUserAsync(string first_name, string second_name)
+        {
+            string query = @"SELECT ""First_name"",""Second_name"",""Birthdate"",""Biography"",""City"", ""Password"", ""User_id""
+                             FROM public.""Users""
+                             WHERE ""First_name"" like @First_name and ""Second_name""like @Second_name";
+
+            var parameters = new NpgsqlParameter[]
+            {
+                new("First_name", NpgsqlDbType.Varchar) { Value = first_name + '%' },
+                new("Second_name", NpgsqlDbType.Varchar) { Value = second_name + '%'}
+            };
+            var data = await npgsqlService.GetQueryResultAsync(query, parameters, ["First_name", "Second_name", "Birthdate", "Biography", "City", "Password", "User_id"]);
+            if (data.Count == 0) return null;
+            var users = new List<User>();
+            foreach (var user in data) 
+            {
+                users.Add(new User(Guid.Parse(user["User_id"].ToString()!), user));
+            }
+            return users;
         }
     }
 }
