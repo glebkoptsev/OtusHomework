@@ -48,7 +48,8 @@ namespace OtusHomework.Services
         {
             string query = @"SELECT ""First_name"",""Second_name"",""Birthdate"",""Biography"",""City"", ""Password"", ""User_id""
                              FROM public.""Users""
-                             WHERE ""First_name"" like @First_name and ""Second_name""like @Second_name";
+                             WHERE ""First_name"" like @First_name and ""Second_name""like @Second_name
+                             ORDER BY ""User_id""";
 
             var parameters = new NpgsqlParameter[]
             {
