@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace OtusHomework.DTOs
+namespace OtusHomework.Database.Entities
 {
     public class User
     {

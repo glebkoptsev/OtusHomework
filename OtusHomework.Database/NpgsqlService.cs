@@ -1,11 +1,12 @@
-﻿using Npgsql;
+﻿using Microsoft.Extensions.Configuration;
+using Npgsql;
 using System.Data;
 
-namespace OtusHomework.Services
+namespace OtusHomework.Database
 {
     public class NpgsqlService : IAsyncDisposable
     {
-        public NpgsqlDataSource Connection { get;}
+        public NpgsqlDataSource Connection { get; }
         public NpgsqlService(IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("postgres")

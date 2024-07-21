@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OtusHomework.Database.Entities;
 using OtusHomework.DTOs;
 using OtusHomework.Services;
 

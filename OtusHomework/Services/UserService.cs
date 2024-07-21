@@ -1,5 +1,7 @@
 ﻿using Npgsql;
 using NpgsqlTypes;
+using OtusHomework.Database;
+using OtusHomework.Database.Entities;
 using OtusHomework.DTOs;
 using OtusHomework.Security;
 
