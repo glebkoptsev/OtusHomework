@@ -9,6 +9,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["OtusHomework/OtusHomework.csproj", "OtusHomework/"]
+COPY ["OtusHomework.Database/OtusHomework.Database.csproj", "OtusHomework.Database/"]
 RUN dotnet restore "OtusHomework/OtusHomework.csproj"
 COPY . .
 WORKDIR "/src/OtusHomework"

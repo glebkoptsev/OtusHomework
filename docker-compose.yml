@@ -26,6 +26,7 @@ services:
   postgres_db:
     container_name: otushomework_postgres
     image: postgres:latest
+    command: -c 'max_connections=1000'
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 7g0WfNsQziV5r5P

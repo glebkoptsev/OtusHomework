@@ -6,40 +6,49 @@ namespace OtusHomework.Database
 {
     public class NpgsqlService : IAsyncDisposable, IDisposable
     {
-        public NpgsqlDataSource Connection { get; }
+        public NpgsqlDataSource Npgsql { get; }
         public NpgsqlService(IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("postgres")
                 ?? throw new Exception("connection string not found");
-            Connection = NpgsqlDataSource.Create(connectionString);
+            Npgsql = NpgsqlDataSource.Create(connectionString);
             CreateDbSchema();
         }
 
         public void Dispose()
         {
-            Connection.Dispose();
+            Npgsql.Dispose();
             GC.SuppressFinalize(this);
         }
 
         public async ValueTask DisposeAsync()
         {
-            await Connection.DisposeAsync();
+            await Npgsql.DisposeAsync();
             GC.SuppressFinalize(this);
         }
 
         public async Task<int> ExecuteNonQueryAsync(string query, NpgsqlParameter[] parameters)
         {
-            await using var cmd = Connection.CreateCommand(query);
+            await using var connection = await Npgsql.OpenConnectionAsync();
+            await using var cmd = new NpgsqlCommand(query, connection);
             if (parameters.Length > 0)
+            {
+                //await cmd.PrepareAsync();
                 cmd.Parameters.AddRange(parameters);
+            }
             return await cmd.ExecuteNonQueryAsync();
         }
 
         public async Task<List<Dictionary<string, object>>> GetQueryResultAsync(string query, NpgsqlParameter[] parameters, string[] columns)
         {
             List<Dictionary<string, object>> result = [];
-            await using var cmd = Connection.CreateCommand(query);
-            cmd.Parameters.AddRange(parameters);
+            await using var connection = await Npgsql.OpenConnectionAsync();
+            await using var cmd = new NpgsqlCommand(query, connection);
+            if (parameters.Length > 0)
+            {
+                //await cmd.PrepareAsync();
+                cmd.Parameters.AddRange(parameters);
+            }
             await using var reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
             {
