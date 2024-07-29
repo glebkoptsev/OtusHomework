@@ -6,12 +6,12 @@ namespace OtusHomework.Database
 {
     public class NpgsqlService : IAsyncDisposable, IDisposable
     {
-        public NpgsqlDataSource Npgsql { get; }
+        private NpgsqlMultiHostDataSource Npgsql { get; }
         public NpgsqlService(IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("postgres")
                 ?? throw new Exception("connection string not found");
-            Npgsql = NpgsqlDataSource.Create(connectionString);
+            Npgsql = new NpgsqlDataSourceBuilder(connectionString).BuildMultiHost();
             CreateDbSchema();
         }
 
@@ -29,7 +29,7 @@ namespace OtusHomework.Database
 
         public async Task<int> ExecuteNonQueryAsync(string query, NpgsqlParameter[] parameters)
         {
-            await using var connection = await Npgsql.OpenConnectionAsync();
+            await using var connection = await Npgsql.OpenConnectionAsync(TargetSessionAttributes.Primary);
             await using var cmd = new NpgsqlCommand(query, connection);
             if (parameters.Length > 0)
             {
@@ -39,10 +39,10 @@ namespace OtusHomework.Database
             return await cmd.ExecuteNonQueryAsync();
         }
 
-        public async Task<List<Dictionary<string, object>>> GetQueryResultAsync(string query, NpgsqlParameter[] parameters, string[] columns)
+        public async Task<List<Dictionary<string, object>>> GetQueryResultAsync(string query, NpgsqlParameter[] parameters, string[] columns, TargetSessionAttributes targetSessionAttributes = TargetSessionAttributes.Any)
         {
             List<Dictionary<string, object>> result = [];
-            await using var connection = await Npgsql.OpenConnectionAsync();
+            await using var connection = await Npgsql.OpenConnectionAsync(targetSessionAttributes);
             await using var cmd = new NpgsqlCommand(query, connection);
             if (parameters.Length > 0)
             {

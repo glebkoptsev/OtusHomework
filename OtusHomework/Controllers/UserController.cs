@@ -27,7 +27,7 @@ namespace OtusHomework.Controllers
             return Ok(user);
         }
 
-        [HttpGet, Route("search")]
+        [HttpGet, Route("search"), Authorize]
         public async Task<ActionResult<List<User>>> SearchUser([Required] string first_name, [Required] string second_name)
         {
             var users = await userService.SearchUserAsync(first_name, second_name);

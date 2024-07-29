@@ -20,7 +20,7 @@ namespace OtusHomework.Services
             {
                 new("User_id", NpgsqlDbType.Uuid) { Value = id }
             };
-            var data = await npgsqlService.GetQueryResultAsync(query, parameters, ["First_name", "Second_name", "Birthdate", "Biography", "City", "Password"]);
+            var data = await npgsqlService.GetQueryResultAsync(query, parameters, ["First_name", "Second_name", "Birthdate", "Biography", "City", "Password"], TargetSessionAttributes.PreferStandby);
             if (data.Count == 0) return null;
             return new User(id, data[0]);
         }
@@ -56,7 +56,7 @@ namespace OtusHomework.Services
                 new("First_name", NpgsqlDbType.Varchar) { Value = first_name + '%' },
                 new("Second_name", NpgsqlDbType.Varchar) { Value = second_name + '%'}
             };
-            var data = await npgsqlService.GetQueryResultAsync(query, parameters, ["First_name", "Second_name", "Birthdate", "Biography", "City", "Password", "User_id"]);
+            var data = await npgsqlService.GetQueryResultAsync(query, parameters, ["First_name", "Second_name", "Birthdate", "Biography", "City", "Password", "User_id"], TargetSessionAttributes.PreferStandby);
             if (data.Count == 0) return null;
             var users = new List<User>();
             foreach (var user in data) 
