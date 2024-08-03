@@ -9,7 +9,11 @@ namespace OtusHomework.Database
         private NpgsqlMultiHostDataSource Npgsql { get; }
         public NpgsqlService(IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("postgres")
+            var connectionStringName = "postgres";
+#if DEBUG
+            connectionStringName = "postgres_debug";
+#endif
+            var connectionString = configuration.GetConnectionString(connectionStringName)
                 ?? throw new Exception("connection string not found");
             Npgsql = new NpgsqlDataSourceBuilder(connectionString).BuildMultiHost();
             CreateDbSchema();

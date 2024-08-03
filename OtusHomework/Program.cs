@@ -57,7 +57,6 @@ namespace OtusHomework
                 o.OperationFilter<SecurityRequirementFilter>(JwtBearerDefaults.AuthenticationScheme);
             });
             builder.Services.AddSingleton<NpgsqlService>();
-            builder.Services.AddTransient<PasswordHasher>();
             builder.Services.AddTransient<UserService>();
             var app = builder.Build();
             app.UseSwagger();

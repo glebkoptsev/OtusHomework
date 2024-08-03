@@ -12,10 +12,9 @@ namespace OtusHomework.Controllers
 {
     [ApiController]
     [Route("api/security")]
-    public class SecurityController(UserService userService, PasswordHasher passwordHasher, IOptions<JwtSettings> options) : ControllerBase
+    public class SecurityController(UserService userService, IOptions<JwtSettings> options) : ControllerBase
     {
         private readonly UserService userService = userService;
-        private readonly PasswordHasher passwordHasher = passwordHasher;
         private readonly IOptions<JwtSettings> options = options;
 
         [HttpPost, Route("login")]
