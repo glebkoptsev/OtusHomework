@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OtusHomework.Database.Entities;
 using OtusHomework.DTOs;
@@ -19,7 +18,7 @@ namespace OtusHomework.Controllers
             return Ok(await userService.RegisterUserAsync(request));
         }
 
-        [HttpGet, Route("get/{id}"), Authorize]
+        [HttpGet, Route("get/{id}")]
         public async Task<ActionResult<User>> GetUser(Guid id)
         {
             var user = await userService.GetUserAsync(id);
@@ -27,7 +26,7 @@ namespace OtusHomework.Controllers
             return Ok(user);
         }
 
-        [HttpGet, Route("search"), Authorize]
+        [HttpGet, Route("search")]
         public async Task<ActionResult<List<User>>> SearchUser([Required] string first_name, [Required] string second_name)
         {
             var users = await userService.SearchUserAsync(first_name, second_name);

@@ -3,7 +3,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using OtusHomework.Database;
-using OtusHomework.Database.Security;
 using OtusHomework.Services;
 using OtusHomework.Settings;
 using OtusHomework.Swagger;
@@ -58,6 +57,8 @@ namespace OtusHomework
             });
             builder.Services.AddSingleton<NpgsqlService>();
             builder.Services.AddTransient<UserService>();
+            builder.Services.AddTransient<FriendService>();
+            builder.Services.AddTransient<PostService>();
             var app = builder.Build();
             app.UseSwagger();
             app.UseSwaggerUI();
