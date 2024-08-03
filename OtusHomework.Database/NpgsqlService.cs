@@ -33,7 +33,6 @@ namespace OtusHomework.Database
             await using var cmd = new NpgsqlCommand(query, connection);
             if (parameters.Length > 0)
             {
-                //await cmd.PrepareAsync();
                 cmd.Parameters.AddRange(parameters);
             }
             return await cmd.ExecuteNonQueryAsync();
@@ -46,7 +45,6 @@ namespace OtusHomework.Database
             await using var cmd = new NpgsqlCommand(query, connection);
             if (parameters.Length > 0)
             {
-                //await cmd.PrepareAsync();
                 cmd.Parameters.AddRange(parameters);
             }
             await using var reader = await cmd.ExecuteReaderAsync();
@@ -64,16 +62,18 @@ namespace OtusHomework.Database
 
         private void CreateDbSchema()
         {
-            var query = @"create table if not exists public.""Users"" (
-	                        ""User_id"" uuid NOT NULL,
-	                        ""First_name"" varchar(30) NOT NULL,
-	                        ""Second_name"" varchar(30) NOT NULL,
-	                        ""Birthdate"" varchar(11) NOT NULL,
-	                        ""Biography"" varchar(1000) NOT NULL,
-	                        ""City"" varchar(30) NOT NULL,
-	                        ""Password"" varchar(255) NOT NULL,
-	                        constraint ""PK_Users"" PRIMARY KEY (""User_id"")
-                    )";
+            var query = @"CREATE TABLE IF NOT EXISTS public.users
+                            (
+                                user_id uuid NOT NULL,
+                                first_name character varying(30) NOT NULL,
+                                second_name character varying(30) NOT NULL,
+                                birthdate character varying(11) NOT NULL,
+                                biography character varying(1000) NOT NULL,
+                                city character varying(255) NOT NULL,
+                                password character varying(255) NOT NULL,
+                                CONSTRAINT pk_users PRIMARY KEY (user_id)
+                            );
+                           CREATE INDEX IF NOT EXISTS users_fname_sname_idx ON public.users(first_name varchar_pattern_ops, second_name varchar_pattern_ops);";
             ExecuteNonQueryAsync(query, []).Wait();
         }
     }
