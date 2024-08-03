@@ -90,7 +90,7 @@ namespace OtusHomework.Database
                         (
                             post_id uuid not null,
 	                        user_id uuid not null,
-	                        post varchar(16000) not null,
+	                        post varchar(2000) not null,
                             creation_datetime timestamp not null default CURRENT_TIMESTAMP,
 	                        PRIMARY KEY(post_id),
 	                        FOREIGN KEY (user_id) REFERENCES users (user_id)
