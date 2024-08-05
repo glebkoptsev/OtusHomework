@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
@@ -54,6 +55,14 @@ namespace OtusHomework
                     Scheme = JwtBearerDefaults.AuthenticationScheme
                 });
                 o.OperationFilter<SecurityRequirementFilter>(JwtBearerDefaults.AuthenticationScheme);
+            });
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+#if DEBUG
+                options.Configuration = builder.Configuration.GetConnectionString("redis_debug");
+#else
+                options.Configuration = builder.Configuration.GetConnectionString("redis");
+#endif
             });
             builder.Services.AddSingleton<NpgsqlService>();
             builder.Services.AddTransient<UserService>();

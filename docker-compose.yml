@@ -19,6 +19,7 @@ services:
       - main-network
     depends_on:
       - postgres_db
+      - redis
     restart: always
 
   postgres_db:
@@ -69,5 +70,25 @@ services:
       - ./volumes/pgslave_sec:/var/lib/postgresql/data
     restart: always      
 
-  
-  
+  redis:
+    image: redis:7.4.0
+    container_name: otushomework_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./volumes/redisdata:/data
+    networks:
+      - main-network
+    restart: always
+    
+  otushomework_cache_warmup:
+    container_name: otushomework_cache_warmup
+    image: gkoptsev/otushomework_cache_warmup:latest
+    build:
+      context: .
+      dockerfile: OtusHomework.СacheWarmup/Dockerfile
+    networks:
+      - main-network
+    depends_on:
+      - postgres_db
+      - redis

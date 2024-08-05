@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OtusHomework.Database", "Ot
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OtusHomework.UsersGenerator", "OtusHomework.UsersGenerator\OtusHomework.UsersGenerator.csproj", "{87D39F14-429E-4516-AB3B-2E2D1499D907}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OtusHomework.PostsGenerator", "OtusHomework.PostsGenerator\OtusHomework.PostsGenerator.csproj", "{34972884-AD16-4CE9-BC12-34642D04AD56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OtusHomework.PostsGenerator", "OtusHomework.PostsGenerator\OtusHomework.PostsGenerator.csproj", "{34972884-AD16-4CE9-BC12-34642D04AD56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OtusHomework.СacheWarmup", "OtusHomework.СacheWarmup\OtusHomework.СacheWarmup.csproj", "{842A524C-59E8-45D1-A3E8-51F70CAFADC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{34972884-AD16-4CE9-BC12-34642D04AD56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34972884-AD16-4CE9-BC12-34642D04AD56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34972884-AD16-4CE9-BC12-34642D04AD56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{842A524C-59E8-45D1-A3E8-51F70CAFADC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{842A524C-59E8-45D1-A3E8-51F70CAFADC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{842A524C-59E8-45D1-A3E8-51F70CAFADC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{842A524C-59E8-45D1-A3E8-51F70CAFADC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

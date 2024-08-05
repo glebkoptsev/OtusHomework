@@ -94,7 +94,8 @@ namespace OtusHomework.Database
                             creation_datetime timestamp not null default CURRENT_TIMESTAMP,
 	                        PRIMARY KEY(post_id),
 	                        FOREIGN KEY (user_id) REFERENCES users (user_id)
-                        );";
+                        );
+                        CREATE INDEX IF NOT EXISTS posts_userid_idx ON public.posts(user_id);";
 
 
             ExecuteNonQueryAsync(query, []).Wait();

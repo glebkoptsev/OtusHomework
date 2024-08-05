@@ -1,6 +1,5 @@
 ﻿using OtusHomework.Database;
 using System.Text;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace OtusHomework.PostsGenerator
 {
