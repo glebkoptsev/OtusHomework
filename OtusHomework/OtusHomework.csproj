@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OtusHomework.Database\OtusHomework.Database.csproj" />
+    <ProjectReference Include="..\OtusHomework.Kafka\OtusHomework.Kafka.csproj" />
   </ItemGroup>
 
 </Project>

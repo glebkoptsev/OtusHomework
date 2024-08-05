@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OtusHomework.PostsGenerator
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OtusHomework.СacheWarmup", "OtusHomework.СacheWarmup\OtusHomework.СacheWarmup.csproj", "{842A524C-59E8-45D1-A3E8-51F70CAFADC2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OtusHomework.Kafka", "OtusHomework.Kafka\OtusHomework.Kafka.csproj", "{5030FAEE-61C4-40B1-B2AB-DE6B634A6EF2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{842A524C-59E8-45D1-A3E8-51F70CAFADC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{842A524C-59E8-45D1-A3E8-51F70CAFADC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{842A524C-59E8-45D1-A3E8-51F70CAFADC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5030FAEE-61C4-40B1-B2AB-DE6B634A6EF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5030FAEE-61C4-40B1-B2AB-DE6B634A6EF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5030FAEE-61C4-40B1-B2AB-DE6B634A6EF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5030FAEE-61C4-40B1-B2AB-DE6B634A6EF2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

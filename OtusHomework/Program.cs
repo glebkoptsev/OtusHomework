@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using OtusHomework.Database;
+using OtusHomework.Database.Services;
+using OtusHomework.Kafka;
 using OtusHomework.Services;
 using OtusHomework.Settings;
 using OtusHomework.Swagger;
@@ -67,7 +68,10 @@ namespace OtusHomework
             builder.Services.AddSingleton<NpgsqlService>();
             builder.Services.AddTransient<UserService>();
             builder.Services.AddTransient<FriendService>();
+            builder.Services.AddTransient<PostRepository>();
             builder.Services.AddTransient<PostService>();
+            builder.Services.AddSingleton<KafkaClientHandle>();
+            builder.Services.AddSingleton<KafkaProducer<string, string>>();
             var app = builder.Build();
             app.UseSwagger();
             app.UseSwaggerUI();
