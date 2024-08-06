@@ -1,5 +1,5 @@
 ﻿using Confluent.Kafka;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace OtusHomework.Kafka
 {
@@ -7,10 +7,17 @@ namespace OtusHomework.Kafka
     {
         private readonly IProducer<byte[], byte[]> kafkaProducer;
 
-        public KafkaClientHandle(IConfiguration config)
+        public KafkaClientHandle(IOptions<KafkaSettings> config)
         {
-            var conf = new ProducerConfig();
-            //config.GetRequiredSection("Kafka:ProducerSettings").(conf);
+            var conf = new ProducerConfig
+            {
+                ClientId = "dotnet producer",
+#if DEBUG
+                BootstrapServers = config.Value.Host_debug,
+#else
+                BootstrapServers = config.Value.Host,
+#endif
+            };
             kafkaProducer = new ProducerBuilder<byte[], byte[]>(conf).Build();
         }
 

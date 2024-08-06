@@ -1,12 +1,17 @@
-﻿using Npgsql;
+﻿using Confluent.Kafka;
+using Npgsql;
 using NpgsqlTypes;
 using OtusHomework.Database;
+using OtusHomework.Kafka;
+using OtusHomework.Kafka.DTOs;
+using System.Text.Json;
 
 namespace OtusHomework.Services
 {
-    public class FriendService(NpgsqlService npgsqlService)
+    public class FriendService(NpgsqlService npgsqlService, KafkaProducer<string, string> kafkaProducer)
     {
         private readonly NpgsqlService npgsqlService = npgsqlService;
+        private readonly KafkaProducer<string, string> kafkaProducer = kafkaProducer;
 
         public async Task AddFriendAsync(Guid user_id, Guid friend_id)
         {
@@ -18,6 +23,13 @@ namespace OtusHomework.Services
                 new("Friend_id", NpgsqlDbType.Uuid) { Value = friend_id },
             };
             await npgsqlService.ExecuteNonQueryAsync(query, parameters);
+            var message = new Message<string, string>
+            {
+                Key = user_id.ToString(),
+                Value = JsonSerializer.Serialize(new FeedUpdateMessage(ActionTypeEnum.FullReload, null), Consts.JsonSerializerOptions),
+                Timestamp = Timestamp.Default
+            };
+            await kafkaProducer.ProduceAsync("feed-posts", message);
         }
 
         public async Task DeleteFriendAsync(Guid user_id, Guid friend_id)
@@ -30,6 +42,13 @@ namespace OtusHomework.Services
                 new("Friend_id", NpgsqlDbType.Uuid) { Value = friend_id },
             };
             await npgsqlService.ExecuteNonQueryAsync(query, parameters);
+            var message = new Message<string, string>
+            {
+                Key = user_id.ToString(),
+                Value = JsonSerializer.Serialize(new FeedUpdateMessage(ActionTypeEnum.FullReload, null), Consts.JsonSerializerOptions),
+                Timestamp = Timestamp.Default
+            };
+            await kafkaProducer.ProduceAsync("feed-posts", message);
         }
     }
 }

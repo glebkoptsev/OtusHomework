@@ -3,6 +3,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using OtusHomework.Database.Entities;
 using OtusHomework.Database.Services;
 using OtusHomework.Kafka;
+using OtusHomework.Kafka.DTOs;
 using System.Text.Json;
 
 namespace OtusHomework.Services
@@ -18,10 +19,10 @@ namespace OtusHomework.Services
             var message = new Message<string, string>
             {
                 Key = user_id.ToString(),
-                Value = post_id.ToString(),
+                Value = JsonSerializer.Serialize(new FeedUpdateMessage(ActionTypeEnum.Create, post_id), Consts.JsonSerializerOptions),
                 Timestamp = Timestamp.Default
             };
-            await kafkaProducer.ProduceAsync("topic", message);
+            await kafkaProducer.ProduceAsync("feed-posts", message);
             return post_id;
         }
 
@@ -31,10 +32,10 @@ namespace OtusHomework.Services
             var message = new Message<string, string>
             {
                 Key = user_id.ToString(),
-                Value = post_id.ToString(),
+                Value = JsonSerializer.Serialize(new FeedUpdateMessage(ActionTypeEnum.Update, post_id), Consts.JsonSerializerOptions),
                 Timestamp = Timestamp.Default
             };
-            await kafkaProducer.ProduceAsync("topic", message);
+            await kafkaProducer.ProduceAsync("feed-posts", message);
         }
 
         public async Task DeletePostAsync(Guid post_id, Guid user_id)
@@ -43,10 +44,10 @@ namespace OtusHomework.Services
             var message = new Message<string, string>
             {
                 Key = user_id.ToString(),
-                Value = post_id.ToString(),
+                Value = JsonSerializer.Serialize(new FeedUpdateMessage(ActionTypeEnum.Update, post_id), Consts.JsonSerializerOptions),
                 Timestamp = Timestamp.Default
             };
-            await kafkaProducer.ProduceAsync("topic", message);
+            await kafkaProducer.ProduceAsync("feed-posts", message);
         }
 
         public async Task<Post?> GetPostAsync(Guid post_id)
@@ -57,24 +58,16 @@ namespace OtusHomework.Services
         public async Task<IEnumerable<Post>> GetFeedAsync(Guid user_id, int offset, int limit)
         {
             string key = $"feed-{user_id}";
-            var cachedFeed = await distributedCache.GetStringAsync(key);
-            if (cachedFeed is null)
+            List<Post>? cachedFeed = null;
+            var cachedFeedJson = await distributedCache.GetStringAsync(key);
+            if (cachedFeedJson != null)
             {
-                var feed = await postRepo.GetFeedAsync(user_id, offset, limit);
-                if (feed.Count == 0) return feed;
-                var message = new Message<string, string>
-                {
-                    Key = key,
-                    Value = JsonSerializer.Serialize(feed, Consts.JsonSerializerOptions),
-                    Timestamp = Timestamp.Default
-                };
-                await kafkaProducer.ProduceAsync("topic", message);
-                return feed;
+                cachedFeed = JsonSerializer.Deserialize<List<Post>>(cachedFeedJson, Consts.JsonSerializerOptions);
             }
-            else
-            {
-                return JsonSerializer.Deserialize<List<Post>>(cachedFeed, Consts.JsonSerializerOptions)!.Skip(offset).Take(limit);
-            }
+            //если кеша нет или в нём нет нужного кол-ва данных, то берем из базы
+            return cachedFeed != null && cachedFeed.Count >= offset + limit
+                ? cachedFeed.Skip(offset).Take(limit)
+                : await postRepo.GetFeedAsync(user_id, offset, limit);
         }
     }
 }

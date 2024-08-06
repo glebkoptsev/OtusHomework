@@ -18,6 +18,7 @@ namespace OtusHomework
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddOptions();
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+            builder.Services.Configure<KafkaSettings>(builder.Configuration.GetSection("KafkaSettings"));
             builder.Services.AddAuthentication(o =>
             {
                 o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
