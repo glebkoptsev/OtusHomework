@@ -44,7 +44,7 @@ namespace OtusHomework.Services
             var message = new Message<string, string>
             {
                 Key = user_id.ToString(),
-                Value = JsonSerializer.Serialize(new FeedUpdateMessage(ActionTypeEnum.Update, post_id), Consts.JsonSerializerOptions),
+                Value = JsonSerializer.Serialize(new FeedUpdateMessage(ActionTypeEnum.Delete, post_id), Consts.JsonSerializerOptions),
                 Timestamp = Timestamp.Default
             };
             await kafkaProducer.ProduceAsync("feed-posts", message);
@@ -66,7 +66,7 @@ namespace OtusHomework.Services
             }
             //если кеша нет или в нём нет нужного кол-ва данных, то берем из базы
             return cachedFeed != null && cachedFeed.Count >= offset + limit
-                ? cachedFeed.Skip(offset).Take(limit)
+                ? cachedFeed.OrderByDescending(f => f.Creation_datetime).Skip(offset).Take(limit)
                 : await postRepo.GetFeedAsync(user_id, offset, limit);
         }
     }
