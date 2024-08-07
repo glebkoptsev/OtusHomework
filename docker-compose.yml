@@ -20,6 +20,7 @@ services:
     depends_on:
       - postgres_db
       - redis
+      - kafka
     restart: always
 
   postgres_db:
@@ -93,6 +94,20 @@ services:
       - postgres_db
       - redis
 
+  otushomework_cache_update_service:
+    container_name: otushomework_cache_update_service
+    image: gkoptsev/otushomework_cache_update_service:latest
+    build:
+      context: .
+      dockerfile: OtusHomework.CacheUpdateService/Dockerfile
+    networks:
+      - main-network
+    depends_on:
+      - postgres_db
+      - redis
+      - kafka
+    restart: always
+
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     container_name: otushomework_zk
@@ -101,6 +116,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     networks:
       - main-network
+    restart: always
    
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -118,3 +134,4 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    restart: always

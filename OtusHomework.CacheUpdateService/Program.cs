@@ -21,7 +21,7 @@ namespace OtusHomework.CacheUpdateService
 #if DEBUG
                         options.Configuration = hostContext.Configuration.GetConnectionString("redis_debug");
 #else
-                        options.Configuration = builder.Configuration.GetConnectionString("redis");
+                        options.Configuration = hostContext.Configuration.GetConnectionString("redis");
 #endif
                     });
                     services.AddHostedService<Worker>();
