@@ -1,3 +1,5 @@
+using OtusHomework.Database;
+using OtusHomework.Database.Services;
 using OtusHomework.Kafka;
 
 namespace OtusHomework.CacheUpdateService
@@ -12,6 +14,16 @@ namespace OtusHomework.CacheUpdateService
                 {
                     services.AddOptions();
                     services.Configure<KafkaSettings>(hostContext.Configuration.GetSection("KafkaSettings"));
+                    services.AddSingleton<NpgsqlService>();
+                    services.AddTransient<PostRepository>();
+                    services.AddStackExchangeRedisCache(options =>
+                    {
+#if DEBUG
+                        options.Configuration = hostContext.Configuration.GetConnectionString("redis_debug");
+#else
+                        options.Configuration = builder.Configuration.GetConnectionString("redis");
+#endif
+                    });
                     services.AddHostedService<Worker>();
                 });
 
