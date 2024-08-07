@@ -33,9 +33,12 @@ namespace OtusHomework.CacheUpdateService
                         await Task.Delay(2000, ct);
                         continue;
                     }
+                    Console.WriteLine($"Обработка сообщения {consumerResult.Message.Value}; Ключ {consumerResult.Message.Key}");
+
                     var message = JsonSerializer.Deserialize<FeedUpdateMessage>(consumerResult.Message.Value, jsonOptions)!;
                     if (message.ActionType == ActionTypeEnum.FullReload)
                     {
+                        Console.WriteLine($"Инициирована перезагрузка кеша");
                         await ReloadFeedAsync(Guid.Parse(consumerResult.Message.Key), $"feed-{consumerResult.Message.Key}", ct);
                     }
                     else
@@ -45,6 +48,7 @@ namespace OtusHomework.CacheUpdateService
                         var friends_ids = await GetFriendsAsync(Guid.Parse(consumerResult.Message.Key));
                         foreach (var friend_id in friends_ids)
                         {
+                            Console.WriteLine($"Обработка друга {friend_id}");
                             var key = $"feed-{friend_id}";
                             var cachedFeedJson = await cache.GetStringAsync(key, ct);
                             if (cachedFeedJson is null)
@@ -55,6 +59,7 @@ namespace OtusHomework.CacheUpdateService
                             var cachedFeed = JsonSerializer.Deserialize<List<Post>>(cachedFeedJson, jsonOptions)!;
                             if (message.ActionType == ActionTypeEnum.Delete)
                             {
+                                Console.WriteLine($"Удаление поста {message.Post_id}");
                                 var postForDelete = cachedFeed.FirstOrDefault(p => p.Post_id == message.Post_id);
                                 if (postForDelete != null) 
                                 {
@@ -69,6 +74,7 @@ namespace OtusHomework.CacheUpdateService
 
                             if (!cachedFeed.Any(f => f.Post_id == message.Post_id.Value) && message.ActionType == ActionTypeEnum.Create)
                             {
+                                Console.WriteLine($"Добавление поста {message.Post_id}");
                                 cachedFeed.Add(post);
                                 if (cachedFeed.Count > 1000)
                                 {
@@ -79,6 +85,7 @@ namespace OtusHomework.CacheUpdateService
                             }
                             else if (cachedFeed.Any(f => f.Post_id == message.Post_id.Value) && message.ActionType == ActionTypeEnum.Update)
                             {
+                                Console.WriteLine($"Обновление поста {message.Post_id}");
                                 var cachedPost = cachedFeed.First(p => p.Post_id == post.Post_id);
                                 cachedPost = post;
                                 await cache.SetStringAsync(key, JsonSerializer.Serialize(cachedFeed, jsonOptions), ct);
